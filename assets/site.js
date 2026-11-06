@@ -457,3 +457,28 @@
   apply();
   if (mq.addEventListener) mq.addEventListener('change', apply); else if (mq.addListener) mq.addListener(apply);
 })();
+
+/* Colour theme: Auto follows the device (and switches live when the device does); Light and Dark are remembered per visitor */
+(function () {
+  var root = document.documentElement, btn = document.querySelector('[data-theme-toggle]'); if (!btn) return;
+  var mq = window.matchMedia('(prefers-color-scheme: dark)');
+  var next = { auto: 'light', light: 'dark', dark: 'auto' };
+  var label = { auto: 'automatic, follows your device', light: 'light', dark: 'dark' };
+  function read() { try { var t = localStorage.getItem('algo-theme'); return t === 'light' || t === 'dark' ? t : 'auto'; } catch (e) { return 'auto'; } }
+  function apply(mode) {
+    if (mode === 'auto') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', mode);
+    btn.setAttribute('data-mode', mode);
+    btn.setAttribute('aria-label', 'Colour theme: ' + label[mode] + '. Switch to ' + label[next[mode]].split(',')[0]);
+    btn.title = 'Theme: ' + (mode === 'auto' ? 'Auto (device)' : mode[0].toUpperCase() + mode.slice(1));
+    var dark = mode === 'dark' || (mode === 'auto' && mq.matches);
+    [].forEach.call(document.querySelectorAll('meta[name="theme-color"]'), function (m) { m.setAttribute('content', dark ? '#061420' : '#FFFFFF'); });
+  }
+  apply(read());
+  btn.addEventListener('click', function () {
+    var mode = next[read()];
+    try { if (mode === 'auto') localStorage.removeItem('algo-theme'); else localStorage.setItem('algo-theme', mode); } catch (e) {}
+    apply(mode);
+  });
+  var onDevice = function () { if (read() === 'auto') apply('auto'); };
+  if (mq.addEventListener) mq.addEventListener('change', onDevice); else if (mq.addListener) mq.addListener(onDevice);
+})();

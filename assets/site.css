@@ -27,7 +27,8 @@
   --sec-y:112px; --sec-y-tight:80px;
   color-scheme:light;
 }
-@media (prefers-color-scheme:dark){:root{
+/* dark: automatic from the device, unless the visitor picked light; or forced by the toggle */
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#061420; --bg-alt:#0A1C2B; --surface:#0D2131; --surface-2:#13293B;
   --fg:#EDF2F7; --fg-2:#BFCAD6; --muted:#8E9DAD;
   --rule:#1C3245; --rule-2:#15293A; --rule-strong:#EDF2F7;
@@ -38,6 +39,18 @@
   --shadow-2:0 2px 4px rgba(0,0,0,.3),0 24px 48px -20px rgba(0,0,0,.6);
   color-scheme:dark;
 }}
+:root[data-theme="dark"]{
+  --bg:#061420; --bg-alt:#0A1C2B; --surface:#0D2131; --surface-2:#13293B;
+  --fg:#EDF2F7; --fg-2:#BFCAD6; --muted:#8E9DAD;
+  --rule:#1C3245; --rule-2:#15293A; --rule-strong:#EDF2F7;
+  --accent-text:#4CC6EC; --link:#6CCFEF; --tint:rgba(0,169,217,.10);
+  --ink:#0B2436; --foot:#030C15; --field:#081927; --field-line:#2A4257;
+  --focus:#6CCFEF; --error:#FF8A80;
+  --shadow-1:0 1px 2px rgba(0,0,0,.3),0 8px 24px -12px rgba(0,0,0,.5);
+  --shadow-2:0 2px 4px rgba(0,0,0,.3),0 24px 48px -20px rgba(0,0,0,.6);
+  color-scheme:dark;
+}
+:root[data-theme="light"]{color-scheme:light}
 @media (max-width:760px){:root{--sec-y:72px;--sec-y-tight:56px;--head-h:64px}}
 
 /* dark contexts: always navy, in both themes */
@@ -287,7 +300,8 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .photo-row{display:grid;grid-template-columns:2fr 1fr;gap:var(--gap);margin:0 0 56px}
 .photo-row figure{aspect-ratio:var(--ar,3/2)}
 @media (max-width:760px){.photo-row{grid-template-columns:1fr}}
-@media (prefers-color-scheme:dark){:is(.card-media,.prose-media,.photo-row figure) img{filter:brightness(.9)}}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) :is(.card-media,.prose-media,.photo-row figure) img{filter:brightness(.9)}}
+:root[data-theme="dark"] :is(.card-media,.prose-media,.photo-row figure) img{filter:brightness(.9)}
 
 /* ---------- cards: ruled columns ---------- */
 .cards{display:grid;grid-template-columns:repeat(var(--cols,3),minmax(0,1fr));column-gap:var(--gap);row-gap:56px}
@@ -1111,3 +1125,12 @@ html:not(.motion) .logo-row{flex-wrap:wrap;justify-content:center;gap:28px 56px;
   .btn:active,.mbar a:active,.chipf:active,.related a:active{transform:scale(.98)}
   .cards a:active h3,.posts li a:active h3{color:var(--accent-text)}
 }
+
+/* ---------- theme toggle: Auto (device) / Light / Dark ---------- */
+.theme-btn{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;flex:none;border:1px solid var(--rule);border-radius:var(--r);background:transparent;color:var(--fg);cursor:pointer;transition:border-color .2s}
+.theme-btn:hover{border-color:var(--fg)}
+.theme-btn svg{display:none}
+.theme-btn[data-mode="auto"] .ti-auto,.theme-btn[data-mode="light"] .ti-light,.theme-btn[data-mode="dark"] .ti-dark{display:block}
+@media (max-width:819px){.theme-btn{order:2;margin-left:auto}.site-head .search-btn{margin-left:0}}
+@media (max-width:360px){.theme-btn,.search-btn,.burger{width:40px;min-width:40px;height:40px}}
+@media (min-width:2200px){.theme-btn{width:52px;height:52px}}
