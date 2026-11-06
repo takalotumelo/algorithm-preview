@@ -1134,3 +1134,4 @@ html:not(.motion) .logo-row{flex-wrap:wrap;justify-content:center;gap:28px 56px;
 @media (max-width:819px){.theme-btn{order:2;margin-left:auto}.site-head .search-btn{margin-left:0}}
 @media (max-width:360px){.theme-btn,.search-btn,.burger{width:40px;min-width:40px;height:40px}}
 @media (min-width:2200px){.theme-btn{width:52px;height:52px}}
+@media (max-width:300px){:root{--gut:14px}.logo-img{height:17px}.head-in{gap:4px}.theme-btn,.search-btn,.burger{width:36px;min-width:36px;height:36px}}
